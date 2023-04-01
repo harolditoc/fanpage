@@ -22,8 +22,8 @@ class Contenido
     #[ORM\Column(length: 256)]
     private ?string $cContenido = null;
 
-    #[ORM\Column]
-    private ?int $Usuario_uId = null;
+    #[ORM\ManyToOne(inversedBy: 'contenidos')]
+    private ?Usuario $cUsuario = null;
 
 
     public function getCId(): ?int
@@ -74,14 +74,14 @@ class Contenido
         return $this;
     }
 
-    public function getUsuarioUId(): ?int
+    public function getCUsuario(): ?Usuario
     {
-        return $this->Usuario_uId;
+        return $this->cUsuario;
     }
 
-    public function setUsuarioUId(int $Usuario_uId): self
+    public function setCUsuario(?Usuario $cUsuario): self
     {
-        $this->Usuario_uId = $Usuario_uId;
+        $this->cUsuario = $cUsuario;
 
         return $this;
     }

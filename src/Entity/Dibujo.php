@@ -26,6 +26,9 @@ class Dibujo
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $dPrecio = null;
 
+    #[ORM\ManyToOne(inversedBy: 'dibujos')]
+    private ?Usuario $dUsuario = null;
+
     public function getDId(): ?int
     {
         return $this->dId;
@@ -82,6 +85,18 @@ class Dibujo
     public function setDPrecio(?string $dPrecio): self
     {
         $this->dPrecio = $dPrecio;
+
+        return $this;
+    }
+
+    public function getDUsuario(): ?Usuario
+    {
+        return $this->dUsuario;
+    }
+
+    public function setDUsuario(?Usuario $dUsuario): self
+    {
+        $this->dUsuario = $dUsuario;
 
         return $this;
     }
