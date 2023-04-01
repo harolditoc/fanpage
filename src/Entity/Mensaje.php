@@ -30,11 +30,6 @@ class Mensaje
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $mFechaEnvio = null;
 
-    #[ORM\Column]
-    private ?int $usuario_uId = null;
-
- 
-
     public function getMId(): ?int
     {
         return $this->mId;
@@ -103,18 +98,6 @@ class Mensaje
     public function setMFechaEnvio(\DateTimeInterface $mFechaEnvio): self
     {
         $this->mFechaEnvio = $mFechaEnvio;
-
-        return $this;
-    }
-
-    public function getUsuarioUId(): ?int
-    {
-        return $this->usuario_uId;
-    }
-
-    public function setUsuarioUId(int $usuario_uId): self
-    {
-        $this->usuario_uId = $usuario_uId;
 
         return $this;
     }

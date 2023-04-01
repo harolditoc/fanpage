@@ -26,10 +26,6 @@ class Dibujo
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2, nullable: true)]
     private ?string $dPrecio = null;
 
-    #[ORM\Column]
-    private ?int $Usuario_uId = null;
-
-
     public function getDId(): ?int
     {
         return $this->dId;
@@ -86,18 +82,6 @@ class Dibujo
     public function setDPrecio(?string $dPrecio): self
     {
         $this->dPrecio = $dPrecio;
-
-        return $this;
-    }
-
-    public function getUsuarioUId(): ?int
-    {
-        return $this->Usuario_uId;
-    }
-
-    public function setUsuarioUId(int $Usuario_uId): self
-    {
-        $this->Usuario_uId = $Usuario_uId;
 
         return $this;
     }

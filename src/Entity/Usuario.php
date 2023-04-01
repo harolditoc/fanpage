@@ -4,101 +4,96 @@ namespace App\Entity;
 
 use App\Repository\UsuarioRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UsuarioRepository::class)]
-class Usuario
+class Usuario implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    private ?int $uId = null;
+    private ?int $id = null;
 
-    #[ORM\Column(length: 192)]
-    private ?string $uNombres = null;
+    #[ORM\Column(length: 180, unique: true)]
+    private ?string $username = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
-    private ?string $uApellidos = null;
+    #[ORM\Column]
+    private array $roles = [];
 
-    #[ORM\Column(length: 64, nullable: true)]
-    private ?string $uNombreUsuario = null;
+    /**
+     * @var string The hashed password
+     */
+    #[ORM\Column]
+    private ?string $password = null;
 
-    #[ORM\Column(length: 256)]
-    private ?string $uCorreo = null;
-
-    #[ORM\Column(length: 256)]
-    private ?string $uContraseña = null;
-
-
-
-    public function getUId(): ?int
+    public function getId(): ?int
     {
-        return $this->uId;
+        return $this->id;
     }
 
-    public function setUId(int $uId): self
+    public function getUsername(): ?string
     {
-        $this->uId = $uId;
+        return $this->username;
+    }
+
+    public function setUsername(string $username): self
+    {
+        $this->username = $username;
 
         return $this;
     }
 
-    public function getUNombres(): ?string
+    /**
+     * A visual identifier that represents this user.
+     *
+     * @see UserInterface
+     */
+    public function getUserIdentifier(): string
     {
-        return $this->uNombres;
+        return (string) $this->username;
     }
 
-    public function setUNombres(string $uNombres): self
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
     {
-        $this->uNombres = $uNombres;
+        $roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);
+    }
+
+    public function setRoles(array $roles): self
+    {
+        $this->roles = $roles;
 
         return $this;
     }
 
-    public function getUApellidos(): ?string
+    /**
+     * @see PasswordAuthenticatedUserInterface
+     */
+    public function getPassword(): string
     {
-        return $this->uApellidos;
+        return $this->password;
     }
 
-    public function setUApellidos(?string $uApellidos): self
+    public function setPassword(string $password): self
     {
-        $this->uApellidos = $uApellidos;
+        $this->password = $password;
 
         return $this;
     }
 
-    public function getUNombreUsuario(): ?string
+    /**
+     * @see UserInterface
+     */
+    public function eraseCredentials()
     {
-        return $this->uNombreUsuario;
-    }
-
-    public function setUNombreUsuario(?string $uNombreUsuario): self
-    {
-        $this->uNombreUsuario = $uNombreUsuario;
-
-        return $this;
-    }
-
-    public function getUCorreo(): ?string
-    {
-        return $this->uCorreo;
-    }
-
-    public function setUCorreo(string $uCorreo): self
-    {
-        $this->uCorreo = $uCorreo;
-
-        return $this;
-    }
-
-    public function getUContraseña(): ?string
-    {
-        return $this->uContraseña;
-    }
-
-    public function setUContraseña(string $uContraseña): self
-    {
-        $this->uContraseña = $uContraseña;
-
-        return $this;
+        // If you store any temporary, sensitive data on the user, clear it here
+        // $this->plainPassword = null;
     }
 }
