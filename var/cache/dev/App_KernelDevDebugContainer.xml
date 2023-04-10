@@ -21,6 +21,9 @@
       <parameter key="MakerBundle">Symfony\Bundle\MakerBundle\MakerBundle</parameter>
       <parameter key="SensioFrameworkExtraBundle">Sensio\Bundle\FrameworkExtraBundle\SensioFrameworkExtraBundle</parameter>
       <parameter key="WebpackEncoreBundle">Symfony\WebpackEncoreBundle\WebpackEncoreBundle</parameter>
+      <parameter key="DoctrineFixturesBundle">Doctrine\Bundle\FixturesBundle\DoctrineFixturesBundle</parameter>
+      <parameter key="TwigComponentBundle">Symfony\UX\TwigComponent\TwigComponentBundle</parameter>
+      <parameter key="LiveComponentBundle">Symfony\UX\LiveComponent\LiveComponentBundle</parameter>
     </parameter>
     <parameter key="kernel.bundles_metadata" type="collection">
       <parameter key="FrameworkBundle" type="collection">
@@ -70,6 +73,18 @@
       <parameter key="WebpackEncoreBundle" type="collection">
         <parameter key="path">C:\xampp\htdocs\wet\vendor\symfony\webpack-encore-bundle\src</parameter>
         <parameter key="namespace">Symfony\WebpackEncoreBundle</parameter>
+      </parameter>
+      <parameter key="DoctrineFixturesBundle" type="collection">
+        <parameter key="path">C:\xampp\htdocs\wet\vendor\doctrine\doctrine-fixtures-bundle</parameter>
+        <parameter key="namespace">Doctrine\Bundle\FixturesBundle</parameter>
+      </parameter>
+      <parameter key="TwigComponentBundle" type="collection">
+        <parameter key="path">C:\xampp\htdocs\wet\vendor\symfony\ux-twig-component</parameter>
+        <parameter key="namespace">Symfony\UX\TwigComponent</parameter>
+      </parameter>
+      <parameter key="LiveComponentBundle" type="collection">
+        <parameter key="path">C:\xampp\htdocs\wet\vendor\symfony\ux-live-component</parameter>
+        <parameter key="namespace">Symfony\UX\LiveComponent</parameter>
       </parameter>
     </parameter>
     <parameter key="kernel.charset">UTF-8</parameter>
@@ -209,6 +224,8 @@
     <parameter key="env(VAR_DUMPER_SERVER)">127.0.0.1:9912</parameter>
     <parameter key="twig.form.resources" type="collection">
       <parameter>form_div_layout.html.twig</parameter>
+      <parameter>@LiveComponent/form_theme.html.twig</parameter>
+      <parameter>bootstrap_5_layout.html.twig</parameter>
     </parameter>
     <parameter key="twig.default_path">C:\xampp\htdocs\wet/templates</parameter>
     <parameter key="web_profiler.debug_toolbar.intercept_redirects">false</parameter>
@@ -348,6 +365,20 @@
         <argument type="service" id=".service_locator.CshazM0.App\Controller\CasaController"/>
       </call>
     </service>
+    <service id="App\Controller\SecurityController" class="App\Controller\SecurityController" public="true" autowire="true" autoconfigure="true">
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.CshazM0.App\Controller\SecurityController"/>
+      </call>
+    </service>
+    <service id="App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true">
+      <tag name="doctrine.fixture.orm"/>
+      <argument type="service" id="security.user_password_hasher"/>
+    </service>
+    <service id="App\Form\UsuarioType" class="App\Form\UsuarioType" autowire="true" autoconfigure="true">
+      <tag name="form.type"/>
+    </service>
     <service id="App\Repository\ContenidoRepository" class="App\Repository\ContenidoRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
@@ -363,6 +394,17 @@
     <service id="App\Repository\UsuarioRepository" class="App\Repository\UsuarioRepository" autowire="true" autoconfigure="true">
       <tag name="doctrine.repository_service"/>
       <argument type="service" id="doctrine"/>
+    </service>
+    <service id="App\Security\AppAuthenticator" class="App\Security\AppAuthenticator" autowire="true" autoconfigure="true">
+      <argument type="service" id="router.default"/>
+    </service>
+    <service id="App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" shared="false" public="true" autowire="true" autoconfigure="true">
+      <tag name="twig.component" key="login_form" expose_public_props="1" attributes_var="attributes" live="1" csrf="1" route="ux_live_component"/>
+      <tag name="controller.service_arguments"/>
+      <tag name="container.service_subscriber"/>
+      <call method="setContainer">
+        <argument type="service" id=".service_locator.CshazM0.App\Twig\Components\LoginFormComponent"/>
+      </call>
     </service>
     <service id="argument_metadata_factory" class="Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadataFactory"/>
     <service id="response_listener" class="Symfony\Component\HttpKernel\EventListener\ResponseListener">
@@ -1208,14 +1250,18 @@
       <argument type="service" id="form.registry"/>
       <argument type="collection">
         <argument>Symfony\Component\Form\Extension\Core\Type</argument>
+        <argument>App\Form</argument>
         <argument>Symfony\Bridge\Doctrine\Form\Type</argument>
+        <argument>Symfony\UX\LiveComponent\Form\Type</argument>
       </argument>
       <argument type="collection">
+        <argument>App\Form\UsuarioType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FormType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ChoiceType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\FileType</argument>
         <argument>Symfony\Component\Form\Extension\Core\Type\ColorType</argument>
         <argument>Symfony\Bridge\Doctrine\Form\Type\EntityType</argument>
+        <argument>Symfony\UX\LiveComponent\Form\Type\LiveCollectionType</argument>
       </argument>
       <argument type="collection">
         <argument>Symfony\Component\Form\Extension\Core\Type\TransformationFailureExtension</argument>
@@ -1973,6 +2019,9 @@
           <argument>C:\xampp\htdocs\wet\vendor\symfony\maker-bundle\src/translations</argument>
           <argument>C:\xampp\htdocs\wet\vendor\sensio\framework-extra-bundle\src/translations</argument>
           <argument>C:\xampp\htdocs\wet\vendor\symfony\webpack-encore-bundle\src/translations</argument>
+          <argument>C:\xampp\htdocs\wet\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+          <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-twig-component/translations</argument>
+          <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-live-component/translations</argument>
         </argument>
         <argument key="cache_vary" type="collection">
           <argument key="scanned_directories" type="collection">
@@ -1992,6 +2041,9 @@
             <argument>C:\xampp\htdocs\wet\vendor\symfony\maker-bundle\src/translations</argument>
             <argument>C:\xampp\htdocs\wet\vendor\sensio\framework-extra-bundle\src/translations</argument>
             <argument>C:\xampp\htdocs\wet\vendor\symfony\webpack-encore-bundle\src/translations</argument>
+            <argument>C:\xampp\htdocs\wet\vendor\doctrine\doctrine-fixtures-bundle/translations</argument>
+            <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-twig-component/translations</argument>
+            <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-live-component/translations</argument>
           </argument>
         </argument>
       </argument>
@@ -2901,6 +2953,78 @@
         <argument>0</argument>
       </call>
       <call method="addListener">
+        <argument>Symfony\UX\TwigComponent\Event\PreMountEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.twig_component.event_listener.data_model_props_subscriber"/>
+          <argument>onPreMount</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.request</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.event_subscriber"/>
+          <argument>onKernelRequest</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.controller</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.event_subscriber"/>
+          <argument>onKernelController</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.view</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.event_subscriber"/>
+          <argument>onKernelView</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.response</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.event_subscriber"/>
+          <argument>onKernelResponse</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>kernel.exception</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.event_subscriber"/>
+          <argument>onKernelException</argument>
+        </argument>
+        <argument>20</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\UX\TwigComponent\Event\PreCreateForRenderEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.intercept_child_component_render_subscriber"/>
+          <argument>preComponentCreated</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\UX\TwigComponent\Event\PostRenderEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.reset_deterministic_id_subscriber"/>
+          <argument>onPostRender</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\UX\TwigComponent\Event\PreRenderEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="ux.live_component.add_attributes_subscriber"/>
+          <argument>onPreRender</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
         <argument>Symfony\Component\Security\Http\Event\CheckPassportEvent</argument>
         <argument type="collection">
           <argument type="service_closure" id="security.listener.csrf_protection"/>
@@ -3365,7 +3489,7 @@
       <argument type="service" id="form.registry"/>
     </service>
     <service id="form.extension" class="Symfony\Component\Form\Extension\DependencyInjection\DependencyInjectionExtension">
-      <argument type="service" id=".service_locator.y4dplYt"/>
+      <argument type="service" id=".service_locator.FXHzS.9"/>
       <argument type="collection">
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="iterator">
           <argument type="service" id="form.type_extension.form.transformation_failure_handling"/>
@@ -5136,6 +5260,12 @@
       <call method="addExtension">
         <argument type="service" id="webpack_encore.twig_stimulus_extension"/>
       </call>
+      <call method="addExtension">
+        <argument type="service" id="ux.twig_component.twig.component_extension"/>
+      </call>
+      <call method="addExtension">
+        <argument type="service" id="ux.live_component.twig.component_extension"/>
+      </call>
       <call method="addGlobal">
         <argument>app</argument>
         <argument type="service" id="twig.app_variable"/>
@@ -5237,6 +5367,14 @@
         <argument>!Security</argument>
       </call>
       <call method="addPath">
+        <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-live-component/templates</argument>
+        <argument>LiveComponent</argument>
+      </call>
+      <call method="addPath">
+        <argument>C:\xampp\htdocs\wet\vendor\symfony\ux-live-component/templates</argument>
+        <argument>!LiveComponent</argument>
+      </call>
+      <call method="addPath">
         <argument>C:\xampp\htdocs\wet/templates</argument>
       </call>
       <call method="addPath">
@@ -5325,7 +5463,7 @@
       <argument>,</argument>
     </service>
     <service id="twig.runtime_loader" class="Twig\RuntimeLoader\ContainerRuntimeLoader">
-      <argument type="service" id=".service_locator.pTeli0u"/>
+      <argument type="service" id=".service_locator.KGVDyJe"/>
     </service>
     <service id="twig.error_renderer.html" class="Symfony\Bridge\Twig\ErrorRenderer\TwigErrorRenderer">
       <argument type="service" id="twig"/>
@@ -5475,7 +5613,7 @@
       <argument type="service" id=".service_locator.LrCXAmX"/>
       <argument type="collection">
         <argument key="dev">null</argument>
-        <argument key="main">null</argument>
+        <argument key="main" type="service" id=".service_locator.GRdfVUQ"/>
       </argument>
     </service>
     <service id="security.authentication.trust_resolver" class="Symfony\Component\Security\Core\Authentication\AuthenticationTrustResolver"/>
@@ -5554,6 +5692,14 @@
       <argument type="service" id="request_stack" on-invalid="null"/>
       <argument type="service" id="router.default" on-invalid="null"/>
       <argument type="service" id="security.token_storage" on-invalid="null"/>
+      <call method="registerListener">
+        <argument>main</argument>
+        <argument>app_logout</argument>
+        <argument>logout</argument>
+        <argument>_csrf_token</argument>
+        <argument>null</argument>
+        <argument>null</argument>
+      </call>
     </service>
     <service id="security.user.provider.missing" class="Symfony\Component\Security\Core\User\MissingUserProvider" abstract="true">
       <argument type="abstract">firewall</argument>
@@ -5896,7 +6042,9 @@
       <argument type="service" id=".service_locator.zJyh7qS"/>
       <argument type="service" id=".service_locator._1SGciK"/>
       <argument type="collection">
-        <argument key="main" type="collection"/>
+        <argument key="main" type="collection">
+          <argument type="service" id="App\Security\AppAuthenticator"/>
+        </argument>
       </argument>
       <argument>false</argument>
       <call method="setName">
@@ -5949,12 +6097,22 @@
       <argument>false</argument>
       <argument>security.user.provider.concrete.app_user_provider</argument>
       <argument>main</argument>
+      <argument>App\Security\AppAuthenticator</argument>
       <argument>null</argument>
       <argument>null</argument>
+      <argument type="collection">
+        <argument>App\Security\AppAuthenticator</argument>
+      </argument>
       <argument>null</argument>
-      <argument type="collection"/>
-      <argument>null</argument>
-      <argument>null</argument>
+      <argument type="collection">
+        <argument key="path">app_logout</argument>
+        <argument key="target">app_casa</argument>
+        <argument key="enable_csrf">null</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="invalidate_session">true</argument>
+        <argument key="delete_cookies" type="collection"/>
+      </argument>
     </service>
     <service id="security.listener.main.user_provider" class="Symfony\Component\Security\Http\EventListener\UserProviderListener">
       <tag name="kernel.event_listener" dispatcher="security.event_dispatcher.main" event="Symfony\Component\Security\Http\Event\CheckPassportEvent" priority="2048" method="checkPassport"/>
@@ -5975,6 +6133,22 @@
         <argument type="collection">
           <argument type="service_closure" id="security.listener.session.main"/>
           <argument>onSuccessfulLogin</argument>
+        </argument>
+        <argument>0</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.default.main"/>
+          <argument>onLogout</argument>
+        </argument>
+        <argument>64</argument>
+      </call>
+      <call method="addListener">
+        <argument>Symfony\Component\Security\Http\Event\LogoutEvent</argument>
+        <argument type="collection">
+          <argument type="service_closure" id="security.logout.listener.session.main"/>
+          <argument>onLogout</argument>
         </argument>
         <argument>0</argument>
       </call>
@@ -6058,9 +6232,29 @@
       <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.main"/>
       <argument type="service" id="security.authentication.session_strategy"/>
     </service>
+    <service id="security.logout_listener.main" class="Symfony\Component\Security\Http\Firewall\LogoutListener">
+      <argument type="service" id="security.token_storage"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument type="service" id="security.event_dispatcher.main"/>
+      <argument type="collection">
+        <argument key="csrf_parameter">_csrf_token</argument>
+        <argument key="csrf_token_id">logout</argument>
+        <argument key="logout_path">app_logout</argument>
+      </argument>
+    </service>
+    <service id="security.logout.listener.default.main" class="Symfony\Component\Security\Http\EventListener\DefaultLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.main"/>
+      <argument type="service" id="security.http_utils"/>
+      <argument>app_casa</argument>
+    </service>
+    <service id="security.logout.listener.session.main" class="Symfony\Component\Security\Http\EventListener\SessionLogoutListener">
+      <tag name="kernel.event_subscriber" dispatcher="security.event_dispatcher.main"/>
+    </service>
     <service id="security.authenticator.manager.main" class="Symfony\Component\Security\Http\Authentication\AuthenticatorManager">
       <tag name="monolog.logger" channel="security"/>
-      <argument type="collection"/>
+      <argument type="collection">
+        <argument type="service" id="App\Security\AppAuthenticator"/>
+      </argument>
       <argument type="service" id="security.token_storage"/>
       <argument type="service" id="security.event_dispatcher.main"/>
       <argument>main</argument>
@@ -6081,11 +6275,17 @@
       <argument type="service" id="security.authentication.trust_resolver"/>
       <argument type="service" id="security.http_utils"/>
       <argument>main</argument>
-      <argument>null</argument>
+      <argument type="service" id="App\Security\AppAuthenticator"/>
       <argument>null</argument>
       <argument>null</argument>
       <argument type="service" id="monolog.logger.security" on-invalid="null"/>
       <argument>false</argument>
+    </service>
+    <service id=".service_locator.GRdfVUQ" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Security\AppAuthenticator" type="service_closure" id="App\Security\AppAuthenticator"/>
+      </argument>
     </service>
     <service id="security.firewall.map.context.main" class="Symfony\Bundle\SecurityBundle\Security\LazyFirewallContext">
       <argument type="iterator">
@@ -6095,7 +6295,7 @@
         <argument type="service" id="security.access_listener"/>
       </argument>
       <argument type="service" id="security.exception_listener.main"/>
-      <argument>null</argument>
+      <argument type="service" id="security.logout_listener.main"/>
       <argument type="service" id="security.firewall.map.config.main"/>
       <argument type="service" id="security.untracked_token_storage"/>
     </service>
@@ -6495,9 +6695,145 @@
         <argument key="_default" type="service_closure" id="webpack_encore.entrypoint_lookup[_default]"/>
       </argument>
     </service>
+    <service id="doctrine.fixtures_load_command" class="Doctrine\Bundle\FixturesBundle\Command\LoadDataFixturesDoctrineCommand">
+      <tag name="console.command" command="doctrine:fixtures:load"/>
+      <tag name="container.no_preload"/>
+      <argument type="service" id="doctrine.fixtures.loader"/>
+      <argument type="service" id="doctrine"/>
+      <argument type="collection">
+        <argument key="default" type="service" id="doctrine.fixtures.purger.orm_purger_factory"/>
+      </argument>
+      <call method="setName">
+        <argument>doctrine:fixtures:load</argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.loader" class="Doctrine\Bundle\FixturesBundle\Loader\SymfonyFixturesLoader">
+      <argument type="service" id="service_container"/>
+      <call method="addFixtures">
+        <argument type="collection">
+          <argument type="collection">
+            <argument key="fixture" type="service" id="App\DataFixtures\AppFixtures"/>
+            <argument key="groups" type="collection"/>
+          </argument>
+        </argument>
+      </call>
+    </service>
+    <service id="doctrine.fixtures.purger.orm_purger_factory" class="Doctrine\Bundle\FixturesBundle\Purger\ORMPurgerFactory">
+      <tag name="doctrine.fixtures.purger_factory" alias="default"/>
+    </service>
+    <service id="ux.twig_component.component_factory" class="Symfony\UX\TwigComponent\ComponentFactory">
+      <argument type="service" id=".service_locator.DHzmEiW"/>
+      <argument type="service" id="property_accessor"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="collection">
+        <argument key="login_form" type="collection">
+          <argument key="key">login_form</argument>
+          <argument key="expose_public_props">true</argument>
+          <argument key="attributes_var">attributes</argument>
+          <argument key="live">true</argument>
+          <argument key="csrf">true</argument>
+          <argument key="route">ux_live_component</argument>
+          <argument key="service_id">App\Twig\Components\LoginFormComponent</argument>
+          <argument key="class">App\Twig\Components\LoginFormComponent</argument>
+          <argument key="template">components/login_form.html.twig</argument>
+        </argument>
+      </argument>
+    </service>
+    <service id="ux.twig_component.component_stack" class="Symfony\UX\TwigComponent\ComponentStack"/>
+    <service id="ux.twig_component.component_renderer" class="Symfony\UX\TwigComponent\ComponentRenderer">
+      <argument type="service" id="twig"/>
+      <argument type="service" id="debug.event_dispatcher"/>
+      <argument type="service" id="ux.twig_component.component_factory"/>
+      <argument type="service" id="property_accessor"/>
+      <argument type="service" id="ux.twig_component.component_stack"/>
+    </service>
+    <service id="ux.twig_component.twig.component_extension" class="Symfony\UX\TwigComponent\Twig\ComponentExtension">
+      <tag name="twig.extension"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\TwigComponent\ComponentRenderer" id="ux.twig_component.component_renderer"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\TwigComponent\ComponentFactory" id="ux.twig_component.component_factory"/>
+      <argument type="service" id=".service_locator.mvvNb09.ux.twig_component.twig.component_extension"/>
+    </service>
+    <service id="ux.twig_component.event_listener.data_model_props_subscriber" class="Symfony\UX\TwigComponent\EventListener\DataModelPropsSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="ux.twig_component.component_stack"/>
+      <argument type="service" id="property_accessor"/>
+    </service>
+    <service id="ux.live_component.component_hydrator" class="Symfony\UX\LiveComponent\LiveComponentHydrator">
+      <argument type="service" id="debug.serializer"/>
+      <argument type="service" id="property_accessor"/>
+      <argument>%env(APP_SECRET)%</argument>
+    </service>
+    <service id="ux.live_component.batch_action_controller" class="Symfony\UX\LiveComponent\Controller\BatchActionController" public="true">
+      <argument type="service" id="http_kernel"/>
+    </service>
+    <service id="ux.live_component.event_subscriber" class="Symfony\UX\LiveComponent\EventListener\LiveComponentSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\TwigComponent\ComponentFactory" id="ux.twig_component.component_factory"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\TwigComponent\ComponentRenderer" id="ux.twig_component.component_renderer"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\LiveComponent\LiveComponentHydrator" id="ux.live_component.component_hydrator"/>
+      <tag name="container.service_subscriber"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
+      <tag name="container.hot_path"/>
+      <argument type="service" id=".service_locator.aWCzaHD.ux.live_component.event_subscriber"/>
+    </service>
+    <service id="ux.live_component.intercept_child_component_render_subscriber" class="Symfony\UX\LiveComponent\EventListener\InterceptChildComponentRenderSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="ux.twig_component.component_stack"/>
+      <argument type="service" id="ux.live_component.deterministic_id_calculator"/>
+      <argument type="service" id="ux.live_component.fingerprint_calculator"/>
+      <argument type="service" id="ux.live_component.attribute_helper"/>
+      <argument type="service" id="ux.twig_component.component_factory"/>
+      <argument type="service" id="ux.live_component.component_hydrator"/>
+    </service>
+    <service id="ux.live_component.reset_deterministic_id_subscriber" class="Symfony\UX\LiveComponent\EventListener\ResetDeterministicIdSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <argument type="service" id="ux.live_component.deterministic_id_calculator"/>
+      <argument type="service" id="ux.twig_component.component_stack"/>
+    </service>
+    <service id="ux.live_component.twig.component_extension" class="Symfony\UX\LiveComponent\Twig\LiveComponentExtension">
+      <tag name="twig.extension"/>
+    </service>
+    <service id="ux.live_component.twig.component_runtime" class="Symfony\UX\LiveComponent\Twig\LiveComponentRuntime">
+      <tag name="twig.runtime"/>
+      <argument type="service" id="ux.live_component.component_hydrator"/>
+      <argument type="service" id="ux.twig_component.component_factory"/>
+      <argument type="service" id="router.default"/>
+    </service>
+    <service id="Symfony\UX\LiveComponent\ComponentValidator" class="Symfony\UX\LiveComponent\ComponentValidator">
+      <tag name="container.service_subscriber" key="validator" id="validator"/>
+      <argument type="service" id=".service_locator.UkmPaE6.Symfony\UX\LiveComponent\ComponentValidator"/>
+    </service>
+    <service id="ux.live_component.attribute_helper" class="Symfony\UX\LiveComponent\Util\TwigAttributeHelper">
+      <argument type="service" id="twig"/>
+    </service>
+    <service id="ux.live_component.add_attributes_subscriber" class="Symfony\UX\LiveComponent\EventListener\AddLiveAttributesSubscriber">
+      <tag name="kernel.event_subscriber"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\LiveComponent\LiveComponentHydrator" id="ux.live_component.component_hydrator"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\TwigComponent\ComponentStack" id="ux.twig_component.component_stack"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\LiveComponent\Util\TwigAttributeHelper" id="ux.live_component.attribute_helper"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator" id="ux.live_component.deterministic_id_calculator"/>
+      <tag name="container.service_subscriber" key="Symfony\UX\LiveComponent\Util\FingerprintCalculator" id="ux.live_component.fingerprint_calculator"/>
+      <tag name="container.service_subscriber"/>
+      <argument type="service" id=".service_locator.E8zdUSB.ux.live_component.add_attributes_subscriber"/>
+    </service>
+    <service id="ux.live_component.deterministic_id_calculator" class="Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator"/>
+    <service id="ux.live_component.fingerprint_calculator" class="Symfony\UX\LiveComponent\Util\FingerprintCalculator">
+      <argument>%env(APP_SECRET)%</argument>
+    </service>
+    <service id="form.live_collection" class="Symfony\UX\LiveComponent\Form\Type\LiveCollectionType">
+      <tag name="form.type"/>
+    </service>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\CasaController" class="App\Controller\CasaController" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\CasaController" class="App\Controller\CasaController" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Controller\CasaController" class="App\Controller\CasaController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Controller\SecurityController" class="App\Controller\SecurityController" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Doctrine\Bundle\FixturesBundle\ORMFixtureInterface.0.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\DataFixtures\AppFixtures" class="App\DataFixtures\AppFixtures" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Component\Form\FormTypeInterface.0.App\Form\UsuarioType" class="App\Form\UsuarioType" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Form\UsuarioType" class="App\Form\UsuarioType" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\ContenidoRepository" class="App\Repository\ContenidoRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\ContenidoRepository" class="App\Repository\ContenidoRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\DibujoRepository" class="App\Repository\DibujoRepository" autowire="true" abstract="true"/>
@@ -6506,6 +6842,10 @@
     <service id=".abstract.instanceof.App\Repository\MensajeRepository" class="App\Repository\MensajeRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UsuarioRepository" class="App\Repository\UsuarioRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UsuarioRepository" class="App\Repository\UsuarioRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
+    <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
+    <service id=".instanceof.App\Twig\Components\LoginFormComponent.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".service_locator.7nzbL4K" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -6843,13 +7183,21 @@
         <argument key="loader" type="service_closure" id=".errored..service_locator.y4_Zrx..Symfony\Component\Config\Loader\LoaderInterface"/>
       </argument>
     </service>
-    <service id=".service_locator.HBdvAhp" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.rSTd.nA" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
+      </argument>
+    </service>
+    <service id=".service_locator.o.RE2ja" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
+        <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
       </argument>
@@ -6948,6 +7296,11 @@
       <argument type="service" id="debug.serializer.normalizer.flatten_exception.inner"/>
       <argument type="service" id="serializer.data_collector"/>
     </service>
+    <service id="debug.ux.live_component.doctrine_object_normalizer" class="Symfony\Component\Serializer\Debug\TraceableNormalizer">
+      <tag name="serializer.normalizer" priority="-100"/>
+      <argument type="service" id="debug.ux.live_component.doctrine_object_normalizer.inner"/>
+      <argument type="service" id="serializer.data_collector"/>
+    </service>
     <service id="debug.serializer.encoder.xml" class="Symfony\Component\Serializer\Debug\TraceableEncoder">
       <tag name="serializer.encoder"/>
       <argument type="service" id="debug.serializer.encoder.xml.inner"/>
@@ -7023,14 +7376,16 @@
       <argument type="service" id="debug.argument_resolver.not_tagged_controller.inner"/>
       <argument type="service" id="debug.stopwatch"/>
     </service>
-    <service id=".service_locator.y4dplYt" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.FXHzS.9" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="App\Form\UsuarioType" type="service_closure" id="App\Form\UsuarioType"/>
         <argument key="Symfony\Bridge\Doctrine\Form\Type\EntityType" type="service_closure" id="form.type.entity"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ChoiceType" type="service_closure" id="form.type.choice"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\ColorType" type="service_closure" id="form.type.color"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FileType" type="service_closure" id="form.type.file"/>
         <argument key="Symfony\Component\Form\Extension\Core\Type\FormType" type="service_closure" id="form.type.form"/>
+        <argument key="Symfony\UX\LiveComponent\Form\Type\LiveCollectionType" type="service_closure" id="form.live_collection"/>
       </argument>
     </service>
     <service id="messenger.bus.default.middleware.traceable" class="Symfony\Component\Messenger\Middleware\TraceableMiddleware">
@@ -7396,6 +7751,18 @@
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.CshazM0" method="withContext"/>
     </service>
+    <service id=".service_locator.CshazM0.App\Controller\SecurityController" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Controller\SecurityController"/>
+      <argument>App\Controller\SecurityController</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.CshazM0" method="withContext"/>
+    </service>
+    <service id=".service_locator.CshazM0.App\Twig\Components\LoginFormComponent" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="App\Twig\Components\LoginFormComponent"/>
+      <argument>App\Twig\Components\LoginFormComponent</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.CshazM0" method="withContext"/>
+    </service>
     <service id=".service_locator.fuYM_Z." class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
@@ -7455,6 +7822,64 @@
       <argument>sensio_framework_extra.view.listener</argument>
       <argument type="service" id="service_container"/>
       <factory service=".service_locator.xRhNObu" method="withContext"/>
+    </service>
+    <service id=".service_locator.mvvNb09" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="Symfony\UX\TwigComponent\ComponentFactory" type="service_closure" id="ux.twig_component.component_factory"/>
+        <argument key="Symfony\UX\TwigComponent\ComponentRenderer" type="service_closure" id="ux.twig_component.component_renderer"/>
+      </argument>
+    </service>
+    <service id=".service_locator.mvvNb09.ux.twig_component.twig.component_extension" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="ux.twig_component.twig.component_extension"/>
+      <argument>ux.twig_component.twig.component_extension</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.mvvNb09" method="withContext"/>
+    </service>
+    <service id=".service_locator.aWCzaHD" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="Symfony\Component\Security\Csrf\CsrfTokenManagerInterface" type="service_closure" id="security.csrf.token_manager" on-invalid="ignore"/>
+        <argument key="Symfony\UX\LiveComponent\LiveComponentHydrator" type="service_closure" id="ux.live_component.component_hydrator"/>
+        <argument key="Symfony\UX\TwigComponent\ComponentFactory" type="service_closure" id="ux.twig_component.component_factory"/>
+        <argument key="Symfony\UX\TwigComponent\ComponentRenderer" type="service_closure" id="ux.twig_component.component_renderer"/>
+      </argument>
+    </service>
+    <service id=".service_locator.aWCzaHD.ux.live_component.event_subscriber" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="ux.live_component.event_subscriber"/>
+      <argument>ux.live_component.event_subscriber</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.aWCzaHD" method="withContext"/>
+    </service>
+    <service id=".service_locator.UkmPaE6" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="validator" type="service_closure" id="debug.validator"/>
+      </argument>
+    </service>
+    <service id=".service_locator.UkmPaE6.Symfony\UX\LiveComponent\ComponentValidator" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="Symfony\UX\LiveComponent\ComponentValidator"/>
+      <argument>Symfony\UX\LiveComponent\ComponentValidator</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.UkmPaE6" method="withContext"/>
+    </service>
+    <service id=".service_locator.E8zdUSB" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="Symfony\Component\Routing\Generator\UrlGeneratorInterface" type="service_closure" id="router.default"/>
+        <argument key="Symfony\Component\Security\Csrf\CsrfTokenManagerInterface" type="service_closure" id="security.csrf.token_manager" on-invalid="ignore"/>
+        <argument key="Symfony\UX\LiveComponent\LiveComponentHydrator" type="service_closure" id="ux.live_component.component_hydrator"/>
+        <argument key="Symfony\UX\LiveComponent\Twig\DeterministicTwigIdCalculator" type="service_closure" id="ux.live_component.deterministic_id_calculator"/>
+        <argument key="Symfony\UX\LiveComponent\Util\FingerprintCalculator" type="service_closure" id="ux.live_component.fingerprint_calculator"/>
+        <argument key="Symfony\UX\LiveComponent\Util\TwigAttributeHelper" type="service_closure" id="ux.live_component.attribute_helper"/>
+        <argument key="Symfony\UX\TwigComponent\ComponentStack" type="service_closure" id="ux.twig_component.component_stack"/>
+      </argument>
+    </service>
+    <service id=".service_locator.E8zdUSB.ux.live_component.add_attributes_subscriber" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator_context" id="ux.live_component.add_attributes_subscriber"/>
+      <argument>ux.live_component.add_attributes_subscriber</argument>
+      <argument type="service" id="service_container"/>
+      <factory service=".service_locator.E8zdUSB" method="withContext"/>
     </service>
     <service id=".service_locator.XXv1IfR" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
@@ -7529,6 +7954,12 @@
         <argument key="security.user_checker" type="service_closure" id="security.user_checker"/>
       </argument>
     </service>
+    <service id=".service_locator.DHzmEiW" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="login_form" type="service_closure" id="App\Twig\Components\LoginFormComponent"/>
+      </argument>
+    </service>
     <service id="debug.validator.inner" class="Symfony\Component\Validator\Validator\ValidatorInterface">
       <factory service="validator.builder" method="getValidator"/>
     </service>
@@ -7564,6 +7995,7 @@
     <service id="debug.serializer.inner" class="Symfony\Component\Serializer\Serializer">
       <argument type="collection">
         <argument type="service" id="debug.serializer.denormalizer.unwrapping"/>
+        <argument type="service" id="debug.ux.live_component.doctrine_object_normalizer"/>
         <argument type="service" id="debug.serializer.normalizer.flatten_exception"/>
         <argument type="service" id="debug.serializer.normalizer.problem"/>
         <argument type="service" id="debug.serializer.normalizer.uid"/>
@@ -7650,6 +8082,11 @@
     <service id="debug.serializer.denormalizer.array.inner" class="Symfony\Component\Serializer\Normalizer\ArrayDenormalizer"/>
     <service id="debug.serializer.normalizer.backed_enum.inner" class="Symfony\Component\Serializer\Normalizer\BackedEnumNormalizer"/>
     <service id="debug.serializer.normalizer.flatten_exception.inner" class="Symfony\Component\Messenger\Transport\Serialization\Normalizer\FlattenExceptionNormalizer"/>
+    <service id="debug.ux.live_component.doctrine_object_normalizer.inner" class="Symfony\UX\LiveComponent\Normalizer\DoctrineObjectNormalizer">
+      <argument type="iterator">
+        <argument type="service" id="doctrine"/>
+      </argument>
+    </service>
     <service id="debug.serializer.encoder.xml.inner" class="Symfony\Component\Serializer\Encoder\XmlEncoder"/>
     <service id="debug.serializer.encoder.json.inner" class="Symfony\Component\Serializer\Encoder\JsonEncoder">
       <argument>null</argument>
@@ -7673,12 +8110,12 @@
     <service id="debug.argument_resolver.request.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver"/>
     <service id="debug.argument_resolver.session.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\SessionValueResolver"/>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
-      <argument type="service" id=".service_locator.HBdvAhp"/>
+      <argument type="service" id=".service_locator.o.RE2ja"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
-      <argument type="service" id=".service_locator.HBdvAhp"/>
+      <argument type="service" id=".service_locator.o.RE2ja"/>
     </service>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
       <argument type="iterator">
@@ -8193,7 +8630,7 @@
     </service>
     <service id="console.command_loader" class="Symfony\Component\Console\CommandLoader\ContainerCommandLoader" public="true">
       <tag name="container.no_preload"/>
-      <argument type="service" id=".service_locator..fOZuBK"/>
+      <argument type="service" id=".service_locator._b1RDyz"/>
       <argument type="collection">
         <argument key="about">console.command.about</argument>
         <argument key="assets:install">console.command.assets_install</argument>
@@ -8274,6 +8711,7 @@
         <argument key="lint:twig">twig.command.lint</argument>
         <argument key="debug:firewall">security.command.debug_firewall</argument>
         <argument key="security:hash-password">security.command.user_password_hash</argument>
+        <argument key="doctrine:fixtures:load">doctrine.fixtures_load_command</argument>
         <argument key="make:auth">maker.auto_command.make_auth</argument>
         <argument key="make:command">maker.auto_command.make_command</argument>
         <argument key="make:twig-component">maker.auto_command.make_twig_component</argument>
@@ -8301,7 +8739,7 @@
         <argument key="make:stimulus-controller">maker.auto_command.make_stimulus_controller</argument>
       </argument>
     </service>
-    <service id=".service_locator..fOZuBK" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator._b1RDyz" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="console.command.about" type="service_closure" id=".console.command.about.lazy"/>
@@ -8383,6 +8821,7 @@
         <argument key="twig.command.lint" type="service_closure" id=".twig.command.lint.lazy"/>
         <argument key="security.command.debug_firewall" type="service_closure" id=".security.command.debug_firewall.lazy"/>
         <argument key="security.command.user_password_hash" type="service_closure" id=".security.command.user_password_hash.lazy"/>
+        <argument key="doctrine.fixtures_load_command" type="service_closure" id="doctrine.fixtures_load_command"/>
         <argument key="maker.auto_command.make_auth" type="service_closure" id=".maker.auto_command.make_auth.lazy"/>
         <argument key="maker.auto_command.make_command" type="service_closure" id=".maker.auto_command.make_command.lazy"/>
         <argument key="maker.auto_command.make_twig_component" type="service_closure" id=".maker.auto_command.make_twig_component.lazy"/>
@@ -8500,13 +8939,14 @@
       <argument type="service" id="monolog.logger.cache" on-invalid="ignore"/>
       <factory class="Symfony\Component\Cache\Adapter\AbstractAdapter" method="createSystemCache"/>
     </service>
-    <service id=".service_locator.pTeli0u" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.KGVDyJe" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="Symfony\Bridge\Twig\Extension\CsrfRuntime" type="service_closure" id="twig.runtime.security_csrf"/>
         <argument key="Symfony\Bridge\Twig\Extension\HttpKernelRuntime" type="service_closure" id="twig.runtime.httpkernel"/>
         <argument key="Symfony\Bridge\Twig\Extension\SerializerRuntime" type="service_closure" id="twig.runtime.serializer"/>
         <argument key="Symfony\Component\Form\FormRenderer" type="service_closure" id="twig.form.renderer"/>
+        <argument key="Symfony\UX\LiveComponent\Twig\LiveComponentRuntime" type="service_closure" id="ux.live_component.twig.component_runtime"/>
       </argument>
     </service>
     <service id="App\Kernel" alias="kernel" public="true"/>
@@ -8650,9 +9090,11 @@
     <service id="sensio_framework_extra.security.expression_language" alias="sensio_framework_extra.security.expression_language.default"/>
     <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupCollectionInterface" alias="webpack_encore.entrypoint_lookup_collection"/>
     <service id="Symfony\WebpackEncoreBundle\Asset\EntrypointLookupInterface" alias="webpack_encore.entrypoint_lookup[_default]"/>
+    <service id="Symfony\UX\TwigComponent\ComponentRendererInterface" alias="ux.twig_component.component_renderer"/>
+    <service id="Symfony\UX\LiveComponent\ComponentValidatorInterface" alias="Symfony\UX\LiveComponent\ComponentValidator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.7nzbL4K" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.HBdvAhp"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.o.RE2ja"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -8674,12 +9116,15 @@
     <service id=".service_locator.h8Jkkd2" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.XDGmiR3" alias=".1_ServiceLocator~w9UXgZQ"/>
     <service id=".service_locator.o.uf2zi" alias=".service_locator.7nzbL4K"/>
-    <service id=".service_locator.L.EDYUC" alias=".service_locator.HBdvAhp"/>
+    <service id=".service_locator.rmxHhKq" alias=".service_locator.o.RE2ja"/>
     <service id=".service_locator.z7kAUPH" alias=".service_locator.vp1pfih"/>
-    <service id=".service_locator.Za9MpXe" alias=".service_locator.y4dplYt"/>
+    <service id=".service_locator.z5naZRU" alias=".service_locator.FXHzS.9"/>
     <service id=".service_locator.XW18Svm" alias=".service_locator.TcKhdzh"/>
     <service id=".service_locator.O24_MAy" alias=".service_locator.yY.p4P7"/>
     <service id=".service_locator.VZoQk0z" alias=".service_locator.CshazM0"/>
+    <service id=".service_locator.jRPdr6k" alias=".service_locator.mvvNb09"/>
+    <service id=".service_locator.kDDrVMq" alias=".service_locator.aWCzaHD"/>
+    <service id=".service_locator.4cNkDVl" alias=".service_locator.E8zdUSB"/>
     <service id="validator" alias="debug.validator"/>
     <service id="http_client" alias=".debug.http_client"/>
     <service id="event_dispatcher" alias="debug.event_dispatcher" public="true"/>
@@ -8707,6 +9152,7 @@
     <service id="serializer.denormalizer.array" alias="debug.serializer.denormalizer.array"/>
     <service id="serializer.normalizer.backed_enum" alias="debug.serializer.normalizer.backed_enum"/>
     <service id="serializer.normalizer.flatten_exception" alias="debug.serializer.normalizer.flatten_exception"/>
+    <service id="ux.live_component.doctrine_object_normalizer" alias="debug.ux.live_component.doctrine_object_normalizer"/>
     <service id="serializer.encoder.xml" alias="debug.serializer.encoder.xml"/>
     <service id="serializer.encoder.json" alias="debug.serializer.encoder.json"/>
     <service id="serializer.encoder.yaml" alias="debug.serializer.encoder.yaml"/>
@@ -8725,9 +9171,11 @@
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
+    <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
     <service id=".service_locator.Kyflpr1" alias=".service_locator.CshazM0"/>
     <service id=".service_locator.u6DWx23" alias=".service_locator.cXsfP3P"/>
     <service id=".service_locator.hnz5ZNh" alias=".service_locator.0TACwl3"/>
     <service id=".service_locator.BlxN3Cw" alias=".service_locator.LrCXAmX"/>
+    <service id=".service_locator.ybDd.vw" alias=".service_locator.DHzmEiW"/>
   </services>
 </container>
