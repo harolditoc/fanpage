@@ -1,0 +1,20 @@
+<div{{ attributes }}
+    data-action="change->live#update"
+>
+    {{ form_start(this.form) }}
+        {{ form_row(this.form.username, {
+            'full_name': 'usuario[username]',
+            'id': 'inputUsername',
+            }) }}
+        {{ form_row(this.form.password, {
+            'full_name': 'usuario[password]',
+            'id': 'inputPassword'
+        }) }}
+        <input type="hidden" name="_csrf_token"
+           value="{{ csrf_token('authenticate') }}">
+           <div class="d-grid mx-auto">
+        <button id="submit-id" class="btn btn-lg btn-primary bot" type="submit" formnovalidate>
+        Ingresar
+    </button> </div>
+    {{ form_end(this.form) }}
+</div>
