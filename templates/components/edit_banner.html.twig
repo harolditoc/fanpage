@@ -1,0 +1,59 @@
+<div{{ attributes }}>
+    <div 
+        data-loading="addClass(low-opacity)"
+    >
+    
+        Selecciona el contenido a editar:
+        <select 
+            class="form-select" 
+            data-model="contenido" 
+            data-action="live#update"
+        >
+            {% for contents in this.getAllContenido %}
+                <option 
+                    value="{{ contents.cId }}"
+                    {{ contenido and contents.cId == contenido.cId ? 'selected': '' }}
+                >{{ contents.cTitulo }} (id {{ contents.cId }})</option>
+            {% endfor %}
+        </select>
+        <hr>
+        <form 
+            data-action="live#action"
+            data-action-name="prevent|save"
+        >
+            <div class="mb-3">
+                <label for="contenido-cTitulo" class="form-label">Titulo</label>
+                <input 
+                    type="text"
+                    id="contenido-cTitulo"
+                    class="form-control"
+                    data-model="contenido.cTitulo"
+                    data-action="live#updateDefer"
+                    value="{{ contenido.cTitulo }}"
+                >
+            </div>
+            <div class="mb-3">
+                <label for="contenido-cContenido" class="form-label">Contenido</label>
+                <textarea 
+                    id="contenido-cContenido"
+                    class="form-control"
+                    data-model="contenido.cContenido"
+                    data-action="live#updateDefer"
+                >{{ contenido.cContenido }}</textarea>
+            </div>
+            
+            {% if isSaved %}
+                <h1>guardado</h1>
+            {% endif %}
+
+            <button
+                data-action="live#action"
+                data-action-name="save"
+                data-loading="addAttribute(disabled)"
+                class="btn btn-primary"
+            >save</button>
+        </form>
+    </div>
+</div>
+
+        

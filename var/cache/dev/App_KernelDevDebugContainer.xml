@@ -398,6 +398,12 @@
     <service id="App\Security\AppAuthenticator" class="App\Security\AppAuthenticator" autowire="true" autoconfigure="true">
       <argument type="service" id="router.default"/>
     </service>
+    <service id="App\Twig\AdmOptions" class="App\Twig\AdmOptions" autowire="true" autoconfigure="true"/>
+    <service id="App\Twig\Components\EditBannerComponent" class="App\Twig\Components\EditBannerComponent" shared="false" public="true" autowire="true" autoconfigure="true">
+      <tag name="twig.component" key="edit_banner" expose_public_props="1" attributes_var="attributes" live="1" csrf="1" route="ux_live_component"/>
+      <tag name="controller.service_arguments"/>
+      <argument type="service" id="App\Repository\ContenidoRepository"/>
+    </service>
     <service id="App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" shared="false" public="true" autowire="true" autoconfigure="true">
       <tag name="twig.component" key="login_form" expose_public_props="1" attributes_var="attributes" live="1" csrf="1" route="ux_live_component"/>
       <tag name="controller.service_arguments"/>
@@ -6722,10 +6728,21 @@
       <tag name="doctrine.fixtures.purger_factory" alias="default"/>
     </service>
     <service id="ux.twig_component.component_factory" class="Symfony\UX\TwigComponent\ComponentFactory">
-      <argument type="service" id=".service_locator.DHzmEiW"/>
+      <argument type="service" id=".service_locator.Rlc3p1J"/>
       <argument type="service" id="property_accessor"/>
       <argument type="service" id="debug.event_dispatcher"/>
       <argument type="collection">
+        <argument key="edit_banner" type="collection">
+          <argument key="key">edit_banner</argument>
+          <argument key="expose_public_props">true</argument>
+          <argument key="attributes_var">attributes</argument>
+          <argument key="live">true</argument>
+          <argument key="csrf">true</argument>
+          <argument key="route">ux_live_component</argument>
+          <argument key="service_id">App\Twig\Components\EditBannerComponent</argument>
+          <argument key="class">App\Twig\Components\EditBannerComponent</argument>
+          <argument key="template">components/edit_banner.html.twig</argument>
+        </argument>
         <argument key="login_form" type="collection">
           <argument key="key">login_form</argument>
           <argument key="expose_public_props">true</argument>
@@ -6842,6 +6859,8 @@
     <service id=".abstract.instanceof.App\Repository\MensajeRepository" class="App\Repository\MensajeRepository" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface.0.App\Repository\UsuarioRepository" class="App\Repository\UsuarioRepository" autowire="true" abstract="true"/>
     <service id=".abstract.instanceof.App\Repository\UsuarioRepository" class="App\Repository\UsuarioRepository" autowire="true" autoconfigure="true" abstract="true"/>
+    <service id=".instanceof.App\Twig\Components\EditBannerComponent.0.App\Twig\Components\EditBannerComponent" class="App\Twig\Components\EditBannerComponent" autowire="true" abstract="true"/>
+    <service id=".abstract.instanceof.App\Twig\Components\EditBannerComponent" class="App\Twig\Components\EditBannerComponent" autowire="true" autoconfigure="true" abstract="true"/>
     <service id=".instanceof.Symfony\Contracts\Service\ServiceSubscriberInterface.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
     <service id=".instanceof.Symfony\Bundle\FrameworkBundle\Controller\AbstractController.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
     <service id=".instanceof.App\Twig\Components\LoginFormComponent.0.App\Twig\Components\LoginFormComponent" class="App\Twig\Components\LoginFormComponent" autowire="true" abstract="true"/>
@@ -7183,21 +7202,37 @@
         <argument key="loader" type="service_closure" id=".errored..service_locator.y4_Zrx..Symfony\Component\Config\Loader\LoaderInterface"/>
       </argument>
     </service>
+    <service id=".service_locator.BSHWg5I" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="rep" type="service_closure" id="App\Repository\ContenidoRepository"/>
+      </argument>
+    </service>
     <service id=".service_locator.rSTd.nA" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
         <argument key="authenticationUtils" type="service_closure" id="security.authentication_utils"/>
       </argument>
     </service>
-    <service id=".service_locator.o.RE2ja" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.CsMkqUa" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="entityManager" type="service_closure" id="doctrine.orm.default_entity_manager"/>
+      </argument>
+    </service>
+    <service id=".service_locator.hpu2bgh" class="Symfony\Component\DependencyInjection\ServiceLocator">
+      <tag name="container.service_locator"/>
+      <argument type="collection">
+        <argument key="App\Controller\CasaController::edit" type="service_closure" id=".service_locator.BSHWg5I"/>
         <argument key="App\Controller\SecurityController::login" type="service_closure" id=".service_locator.rSTd.nA"/>
         <argument key="App\Kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="App\Kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
+        <argument key="App\Twig\Components\EditBannerComponent::save" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="kernel::loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel::registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
+        <argument key="App\Controller\CasaController:edit" type="service_closure" id=".service_locator.BSHWg5I"/>
         <argument key="App\Controller\SecurityController:login" type="service_closure" id=".service_locator.rSTd.nA"/>
+        <argument key="App\Twig\Components\EditBannerComponent:save" type="service_closure" id=".service_locator.CsMkqUa"/>
         <argument key="kernel:loadRoutes" type="service_closure" id=".service_locator.y4_Zrx."/>
         <argument key="kernel:registerContainerConfiguration" type="service_closure" id=".service_locator.y4_Zrx."/>
       </argument>
@@ -7954,9 +7989,10 @@
         <argument key="security.user_checker" type="service_closure" id="security.user_checker"/>
       </argument>
     </service>
-    <service id=".service_locator.DHzmEiW" class="Symfony\Component\DependencyInjection\ServiceLocator">
+    <service id=".service_locator.Rlc3p1J" class="Symfony\Component\DependencyInjection\ServiceLocator">
       <tag name="container.service_locator"/>
       <argument type="collection">
+        <argument key="edit_banner" type="service_closure" id="App\Twig\Components\EditBannerComponent"/>
         <argument key="login_form" type="service_closure" id="App\Twig\Components\LoginFormComponent"/>
       </argument>
     </service>
@@ -8110,12 +8146,12 @@
     <service id="debug.argument_resolver.request.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\RequestValueResolver"/>
     <service id="debug.argument_resolver.session.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\SessionValueResolver"/>
     <service id="debug.argument_resolver.service.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\ServiceValueResolver">
-      <argument type="service" id=".service_locator.o.RE2ja"/>
+      <argument type="service" id=".service_locator.hpu2bgh"/>
     </service>
     <service id="debug.argument_resolver.default.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\DefaultValueResolver"/>
     <service id="debug.argument_resolver.variadic.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\VariadicValueResolver"/>
     <service id="debug.argument_resolver.not_tagged_controller.inner" class="Symfony\Component\HttpKernel\Controller\ArgumentResolver\NotTaggedControllerValueResolver">
-      <argument type="service" id=".service_locator.o.RE2ja"/>
+      <argument type="service" id=".service_locator.hpu2bgh"/>
     </service>
     <service id="debug.traced.messenger.bus.default.inner" class="Symfony\Component\Messenger\MessageBus">
       <argument type="iterator">
@@ -9094,7 +9130,7 @@
     <service id="Symfony\UX\LiveComponent\ComponentValidatorInterface" alias="Symfony\UX\LiveComponent\ComponentValidator"/>
     <service id="container.env_var_processors_locator" alias=".service_locator.7nzbL4K" public="true"/>
     <service id="twig.loader.filesystem" alias="twig.loader.native_filesystem"/>
-    <service id="argument_resolver.controller_locator" alias=".service_locator.o.RE2ja"/>
+    <service id="argument_resolver.controller_locator" alias=".service_locator.hpu2bgh"/>
     <service id="doctrine.id_generator_locator" alias=".service_locator.KLVvNIq"/>
     <service id="twig.loader" alias="twig.loader.native_filesystem"/>
     <service id="Psr\Log\LoggerInterface $requestLogger" alias="monolog.logger.request"/>
@@ -9116,7 +9152,7 @@
     <service id=".service_locator.h8Jkkd2" alias="messenger.retry_strategy_locator"/>
     <service id=".service_locator.XDGmiR3" alias=".1_ServiceLocator~w9UXgZQ"/>
     <service id=".service_locator.o.uf2zi" alias=".service_locator.7nzbL4K"/>
-    <service id=".service_locator.rmxHhKq" alias=".service_locator.o.RE2ja"/>
+    <service id=".service_locator.E1VyGKO" alias=".service_locator.hpu2bgh"/>
     <service id=".service_locator.z7kAUPH" alias=".service_locator.vp1pfih"/>
     <service id=".service_locator.z5naZRU" alias=".service_locator.FXHzS.9"/>
     <service id=".service_locator.XW18Svm" alias=".service_locator.TcKhdzh"/>
@@ -9171,11 +9207,13 @@
     <service id="messenger.bus.default" alias="debug.traced.messenger.bus.default"/>
     <service id="doctrine.orm.default_metadata_driver" alias=".doctrine.orm.default_metadata_driver"/>
     <service id=".service_locator.gFlme_s" alias=".service_locator.y4_Zrx."/>
+    <service id=".service_locator.JWLh4zy" alias=".service_locator.BSHWg5I"/>
     <service id=".service_locator.7NIAq8D" alias=".service_locator.rSTd.nA"/>
+    <service id=".service_locator.9e2t_lq" alias=".service_locator.CsMkqUa"/>
     <service id=".service_locator.Kyflpr1" alias=".service_locator.CshazM0"/>
     <service id=".service_locator.u6DWx23" alias=".service_locator.cXsfP3P"/>
     <service id=".service_locator.hnz5ZNh" alias=".service_locator.0TACwl3"/>
     <service id=".service_locator.BlxN3Cw" alias=".service_locator.LrCXAmX"/>
-    <service id=".service_locator.ybDd.vw" alias=".service_locator.DHzmEiW"/>
+    <service id=".service_locator.2t.oa6f" alias=".service_locator.Rlc3p1J"/>
   </services>
 </container>

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ContenidoRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,8 +19,11 @@ class CasaController extends AbstractController
     }
     
     #[Route('/edit', name: 'app_casa_edit', methods:['GET', 'POST'])]
-    public function edit()
+    public function edit(ContenidoRepository $rep)
     {
-        return $this->render('casa/edit.html.twig');
+        $post = $rep->findOneBy([]);
+        return $this->render('casa/edit.html.twig', [
+            'post' => $post,
+        ]);
     }
 }
